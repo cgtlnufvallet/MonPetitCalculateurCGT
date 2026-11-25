@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combien j'ai perdu ? — CGT LNUF Vallet</title>
+<meta name="description" content="Calculez ce que l'inflation a pris à votre salaire depuis 2022. Calcul fait sur votre téléphone, rien n'est enregistré.">
+<style>
+@font-face { font-family: "Anton"; src: url("polices/Anton-400.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Oswald"; font-weight: 700; src: url("polices/Oswald-700.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Open Sans"; font-weight: 400; src: url("polices/OpenSans-400.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Open Sans"; font-weight: 700; src: url("polices/OpenSans-700.ttf") format("truetype"); font-display: swap; }
+:root { --rouge: #D31118; --noir: #111111; --fond: #F7F7F7; --gris: #5E5E5E; --filet: #CFCFCF; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--fond); color: var(--noir); font: 17px/1.5 "Open Sans", Arial, sans-serif; }
+main { max-width: 560px; margin: 0 auto; padding: 0 16px 40px; }
+.bandeau { background: var(--noir); color: #fff; font: 700 14px/1.2 "Oswald", Arial, sans-serif; text-transform: uppercase;
+           letter-spacing: 0; padding: 10px 16px; display: flex; justify-content: space-between; gap: 12px; }
+.bandeau b { color: #fff; background: var(--rouge); padding: 2px 6px; }
+h1 { font: 400 44px/1.05 "Anton", Impact, sans-serif; text-transform: uppercase; margin: 24px 0 8px; }
+h1 span { color: var(--rouge); }
+h2 { font: 700 19px/1.2 "Oswald", Arial, sans-serif; text-transform: uppercase; margin: 0 0 10px; }
+.intro { margin: 0 0 20px; }
+.carte { background: #fff; border: 2px solid var(--noir); padding: 18px; margin: 0 0 18px; }
+label { display: block; font-weight: 700; margin-bottom: 8px; }
+.saisie { display: flex; gap: 10px; flex-wrap: wrap; }
+.champ { position: relative; flex: 1 1 180px; }
+.champ input { width: 100%; font: 700 24px/1 "Open Sans", Arial, sans-serif; padding: 12px 44px 12px 14px;
+               border: 2px solid var(--noir); border-radius: 0; background: #fff; color: var(--noir); }
+.champ span { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--gris); }
+input:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--rouge); outline-offset: 2px; }
+button { flex: 0 0 auto; min-height: 52px; padding: 0 22px; border: 0; background: var(--rouge); color: #fff;
+         font: 700 18px/1 "Oswald", Arial, sans-serif; text-transform: uppercase; cursor: pointer; }
+button:active { background: #A80D13; }
+.aide { font-size: 14px; color: var(--gris); margin: 10px 0 0; }
+.erreur { color: var(--rouge); font-weight: 700; margin: 10px 0 0; }
+#resultat[hidden] { display: none; }
+.hero { border-top: 6px solid var(--rouge); }
+.hero .val { font: 400 56px/1 "Anton", Impact, sans-serif; color: var(--rouge); margin: 4px 0 6px; }
+.hero p { margin: 0; }
+.chiffres { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 18px; }
+.chiffres .carte { margin: 0; padding: 14px; }
+.chiffres .val { font: 400 32px/1.05 "Anton", Impact, sans-serif; color: var(--noir); }
+.chiffres p { margin: 4px 0 0; font-size: 14px; line-height: 1.35; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+caption { text-align: left; font-size: 14px; color: var(--gris); padding-bottom: 6px; }
+th, td { padding: 8px 6px; border-bottom: 1px solid var(--filet); text-align: right; }
+td { white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font: 700 13px/1.2 "Oswald", Arial, sans-serif; text-transform: uppercase; border-bottom: 2px solid var(--noir); }
+td.ecart { font-weight: 700; color: var(--rouge); }
+details { margin: 0 0 18px; }
+summary { font: 700 17px/1.3 "Oswald", Arial, sans-serif; text-transform: uppercase; cursor: pointer; padding: 6px 0; }
+details p, details li { font-size: 15px; }
+.cta { background: var(--noir); color: #fff; padding: 18px; }
+.cta h2 { color: #fff; }
+.cta a { color: #fff; font-weight: 700; }
+footer { font-size: 13px; color: var(--gris); margin-top: 22px; }
+@media (max-width: 380px) { h1 { font-size: 36px; } .hero .val { font-size: 46px; } .chiffres { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="bandeau"><span>La Vendangeuse</span><b>CGT LNUF Vallet</b></div>
+<main>
+  <h1>Combien j'ai <span>perdu&nbsp;?</span></h1>
+  <p class="intro">Depuis 2022, les prix ont pris <b>+17,4&nbsp;%</b>. Nos augmentations générales&nbsp;: <b>+13,5&nbsp;%</b>.
+     Tapez votre salaire et voyez ce que l'inflation vous a pris, en euros.</p>
+
+  <form class="carte" id="formulaire" novalidate>
+    <label for="salaire">Votre salaire de base brut mensuel en 2026</label>
+    <div class="saisie">
+      <div class="champ"><input id="salaire" name="salaire" type="text" inputmode="decimal" autocomplete="off"
+           placeholder="ex. 2 100" aria-describedby="aide-saisie"><span aria-hidden="true">€</span></div>
+      <button type="submit">Calculer</button>
+    </div>
+    <p class="aide" id="aide-saisie">Sur votre fiche de paie, ligne « salaire de base ». Rien n'est envoyé ni enregistré&nbsp;: le calcul se fait sur votre téléphone.</p>
+    <p class="erreur" id="erreur" role="alert" hidden></p>
+  </form>
+
+  <section id="resultat" aria-live="polite" hidden>
+    <div class="carte hero">
+      <h2>Chaque mois, il vous manque</h2>
+      <div class="val" id="r-ecart"></div>
+      <p id="r-phrase"></p>
+    </div>
+    <div class="chiffres">
+      <div class="carte"><div class="val" id="r-total"></div><p id="r-total-leg"></p></div>
+      <div class="carte"><div class="val" id="r-rattrapage"></div><p>d'augmentation, tout de suite, rien que pour revenir au niveau de 2021.</p></div>
+    </div>
+    <div class="carte">
+      <table>
+        <caption>Votre salaire de base brut mensuel, année par année</caption>
+        <thead><tr><th scope="col">Année</th><th scope="col">Avec nos NAO</th><th scope="col">S'il avait suivi les prix</th><th scope="col">Écart</th></tr></thead>
+        <tbody id="r-tableau"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <details>
+    <summary>Comment c'est calculé</summary>
+    <ol>
+      <li>On part de votre salaire de base actuel et on retire, année par année, les augmentations générales des NAO
+          (2022 : 2,5&nbsp;% ; 2023 : 4,7&nbsp;% ; 2024 : 3,3&nbsp;% ; 2025 : 1,5&nbsp;% ; 2026 : 0,85&nbsp;%, minimum 20&nbsp;€). On retrouve ainsi votre salaire de 2021.</li>
+      <li>On fait évoluer ce salaire de 2021 au rythme des prix (inflation INSEE, moyenne annuelle&nbsp;: 2022 : 5,2&nbsp;% ; 2023 : 4,9&nbsp;% ; 2024 : 2,0&nbsp;% ; 2025 : 0,9&nbsp;% ; 2026 : 3,4&nbsp;%).</li>
+      <li>L'écart entre les deux, c'est ce que l'inflation vous a pris. La perte cumulée l'additionne sur 12 mois par an.</li>
+    </ol>
+    <p>Limites&nbsp;: montants bruts, hors ancienneté, promotions et primes, qui ne compensent pas l'inflation pour tout le monde.
+       </p>
+  </details>
+
+  <div class="cta">
+    <h2>Le compte n'y est pas&nbsp;?</h2>
+    <p>Aux NAO, c'est le nombre qui pèse. Parlez-en à vos élu·es CGT ou écrivez-nous&nbsp;: <a href="mailto:cgt.lnuf.vallet@gmail.com">cgt.lnuf.vallet@gmail.com</a></p>
+  </div>
+
+  <footer>
+    Sources&nbsp;: INSEE (inflation, moyenne annuelle), revalorisations du SMIC, accords NAO LNUF Vallet. Calculateur de la CGT LNUF Vallet, données mises à jour avec La Vendangeuse n°1 (Décembre 2026).
+  </footer>
+</main>
+
+<script>
+const D = {"annees": [2022, 2023, 2024, 2025, 2026], "nao": [2.5, 4.7, 3.3, 1.5, 0.85], "inflation": [5.2, 4.9, 2.0, 0.9, 3.4], "previsions": [], "plancher": {"2026": 20}, "plein_eur": 100, "plein_note": "pleins d'essence (plein de 50 L de SP95-E10 au prix moyen de mi-novembre 2026)"};
+const euros = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
+const pct = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+
+// salaire de l'année précédente, connaissant l'augmentation générale (taux en %, plancher en €)
+function avant(salaire, taux, plancher) {
+  const x = salaire / (1 + taux / 100);
+  if (!plancher || x * taux / 100 >= plancher) return x;
+  return salaire - plancher;
+}
+
+function calculer(s) {
+  const n = D.annees.length, reel = new Array(n);
+  reel[n - 1] = s;
+  for (let k = n - 1; k > 0; k--) reel[k - 1] = avant(reel[k], D.nao[k], D.plancher[D.annees[k]]);
+  const base = avant(reel[0], D.nao[0], D.plancher[D.annees[0]]);
+  let indice = 1, total = 0;
+  const lignes = D.annees.map((a, k) => {
+    indice *= 1 + D.inflation[k] / 100;
+    const indexe = base * indice, ecart = indexe - reel[k];
+    total += 12 * ecart;
+    return { annee: a, reel: reel[k], indexe, ecart };
+  });
+  const der = lignes[n - 1];
+  return { base, lignes, total, ecart: der.ecart, indexe: der.indexe, rattrapage: (der.indexe / s - 1) * 100 };
+}
+
+const f = document.getElementById("formulaire"), champ = document.getElementById("salaire");
+const err = document.getElementById("erreur"), res = document.getElementById("resultat");
+
+f.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const s = parseFloat(champ.value.replace(/[\s  €]/g, "").replace(",", "."));
+  if (!(s >= 800 && s <= 20000)) {
+    err.textContent = "Indiquez un salaire de base brut mensuel en euros, par exemple 2100.";
+    err.hidden = false; res.hidden = true; champ.focus(); return;
+  }
+  err.hidden = true;
+  const r = calculer(s);
+  document.getElementById("r-ecart").textContent = euros.format(Math.max(0, r.ecart)) + " € brut";
+  document.getElementById("r-phrase").textContent =
+    "Si votre salaire avait suivi les prix depuis " + D.annees[0] + ", il serait de " + euros.format(r.indexe) +
+    " € brut par mois en " + D.annees[D.annees.length - 1] + ", au lieu de " + euros.format(s) + " €.";
+  document.getElementById("r-total").textContent = euros.format(Math.max(0, r.total)) + " €";
+  let leg = "brut perdus au total depuis " + D.annees[0];
+  if (D.plein_eur) leg += ", soit environ " + Math.round(r.total / D.plein_eur) + " " + D.plein_note;
+  document.getElementById("r-total-leg").textContent = leg + ".";
+  document.getElementById("r-rattrapage").textContent = "+" + pct.format(Math.max(0, r.rattrapage)) + " %";
+  document.getElementById("r-tableau").innerHTML = r.lignes.map(l =>
+    "<tr><td>" + l.annee + (D.previsions.includes(l.annee) ? "*" : "") + "</td><td>" + euros.format(l.reel) + " €</td><td>" +
+    euros.format(l.indexe) + " €</td><td class=\"ecart\">" + (l.ecart >= 0 ? "−" : "+") + euros.format(Math.abs(l.ecart)) + " €</td></tr>"
+  ).join("");
+  res.hidden = false;
+  res.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+</script>
+</body>
+</html>
