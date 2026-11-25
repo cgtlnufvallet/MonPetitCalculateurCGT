@@ -37,8 +37,13 @@ button:active { background: #A80D13; }
 .erreur { color: var(--rouge); font-weight: 700; margin: 10px 0 0; }
 #resultat[hidden] { display: none; }
 .hero { border-top: 6px solid var(--rouge); }
-.hero .val { font: 400 56px/1 "Anton", Impact, sans-serif; color: var(--rouge); margin: 4px 0 6px; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 0 14px; }
+.duo > div { border-left: 4px solid var(--rouge); padding-left: 12px; }
+.hero .val { font: 400 46px/1 "Anton", Impact, sans-serif; color: var(--rouge); margin: 2px 0 4px; white-space: nowrap; }
+.hero .leg { margin: 0; font-weight: 700; line-height: 1.3; }
 .hero p { margin: 0; }
+tfoot td { font-weight: 700; border-top: 2px solid var(--noir); border-bottom: 0; }
+tfoot td.ecart { font-size: 17px; }
 .chiffres { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 18px; }
 .chiffres .carte { margin: 0; padding: 14px; }
 .chiffres .val { font: 400 32px/1.05 "Anton", Impact, sans-serif; color: var(--noir); }
@@ -57,7 +62,8 @@ details p, details li { font-size: 15px; }
 .cta h2 { color: #fff; }
 .cta a { color: #fff; font-weight: 700; }
 footer { font-size: 13px; color: var(--gris); margin-top: 22px; }
-@media (max-width: 380px) { h1 { font-size: 36px; } .hero .val { font-size: 46px; } .chiffres { grid-template-columns: 1fr; } }
+@media (max-width: 440px) { table { font-size: 13px; } th, td { padding: 7px 3px; } thead th { font-size: 11.5px; } }
+@media (max-width: 380px) { h1 { font-size: 36px; } .duo, .chiffres { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -80,19 +86,23 @@ footer { font-size: 13px; color: var(--gris); margin-top: 22px; }
 
   <section id="resultat" aria-live="polite" hidden>
     <div class="carte hero">
-      <h2>Chaque mois, il vous manque</h2>
-      <div class="val" id="r-ecart"></div>
+      <h2>Il vous manque</h2>
+      <div class="duo">
+        <div><div class="val" id="r-ecart"></div><p class="leg">brut chaque mois, aujourd'hui</p></div>
+        <div><div class="val" id="r-total"></div><p class="leg">brut au total depuis 2022</p></div>
+      </div>
       <p id="r-phrase"></p>
     </div>
     <div class="chiffres">
-      <div class="carte"><div class="val" id="r-total"></div><p id="r-total-leg"></p></div>
+      <div class="carte" id="c-pleins"><div class="val" id="r-pleins"></div><p id="r-pleins-leg"></p></div>
       <div class="carte"><div class="val" id="r-rattrapage"></div><p>d'augmentation, tout de suite, rien que pour revenir au niveau de 2021.</p></div>
     </div>
     <div class="carte">
       <table>
-        <caption>Votre salaire de base brut mensuel, année par année</caption>
-        <thead><tr><th scope="col">Année</th><th scope="col">Avec nos NAO</th><th scope="col">S'il avait suivi les prix</th><th scope="col">Écart</th></tr></thead>
+        <caption>Votre salaire de base brut mensuel, et ce qui vous a manqué année par année</caption>
+        <thead><tr><th scope="col">Année</th><th scope="col">Avec nos NAO</th><th scope="col">Indexé sur les prix</th><th scope="col">Manque par mois</th><th scope="col">Manque sur l'année</th></tr></thead>
         <tbody id="r-tableau"></tbody>
+        <tfoot><tr><td colspan="4">Total depuis 2022</td><td class="ecart" id="r-total-tableau"></td></tr></tfoot>
       </table>
     </div>
   </section>
@@ -120,7 +130,7 @@ footer { font-size: 13px; color: var(--gris); margin-top: 22px; }
 </main>
 
 <script>
-const D = {"annees": [2022, 2023, 2024, 2025, 2026], "nao": [2.5, 4.7, 3.3, 1.5, 0.85], "inflation": [5.2, 4.9, 2.0, 0.9, 3.4], "previsions": [], "plancher": {"2026": 20}, "plein_eur": 100, "plein_note": "pleins d'essence (plein de 50 L de SP95-E10 au prix moyen de mi-novembre 2026)"};
+const D = {"annees": [2022, 2023, 2024, 2025, 2026], "nao": [2.5, 4.7, 3.3, 1.5, 0.85], "inflation": [5.2, 4.9, 2.0, 0.9, 3.4], "previsions": [], "plancher": {"2026": 20}, "plein_eur": 100, "plein_note": "plein de 50 L de SP95-E10 au prix moyen de mi-novembre 2026"};
 const euros = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 const pct = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, minimumFractionDigits: 1 });
 
@@ -159,19 +169,25 @@ f.addEventListener("submit", (e) => {
   }
   err.hidden = true;
   const r = calculer(s);
-  document.getElementById("r-ecart").textContent = euros.format(Math.max(0, r.ecart)) + " € brut";
+  const fin = D.annees[D.annees.length - 1];
+  document.getElementById("r-ecart").textContent = euros.format(Math.max(0, r.ecart)) + " €";
+  document.getElementById("r-total").textContent = euros.format(Math.max(0, r.total)) + " €";
   document.getElementById("r-phrase").textContent =
     "Si votre salaire avait suivi les prix depuis " + D.annees[0] + ", il serait de " + euros.format(r.indexe) +
-    " € brut par mois en " + D.annees[D.annees.length - 1] + ", au lieu de " + euros.format(s) + " €.";
-  document.getElementById("r-total").textContent = euros.format(Math.max(0, r.total)) + " €";
-  let leg = "brut perdus au total depuis " + D.annees[0];
-  if (D.plein_eur) leg += ", soit environ " + Math.round(r.total / D.plein_eur) + " " + D.plein_note;
-  document.getElementById("r-total-leg").textContent = leg + ".";
+    " € brut par mois en " + fin + ", au lieu de " + euros.format(s) + " €. Mois après mois, de " + D.annees[0] +
+    " à " + fin + ", ces écarts s'additionnent : " + euros.format(Math.max(0, r.total)) + " € brut qui ne sont jamais arrivés sur votre compte.";
+  const pleins = document.getElementById("c-pleins");
+  if (D.plein_eur) {
+    document.getElementById("r-pleins").textContent = Math.round(Math.max(0, r.total) / D.plein_eur) + " pleins";
+    document.getElementById("r-pleins-leg").textContent = "d'essence avec ce total" + (D.plein_note ? " (" + D.plein_note + ")" : "") + ".";
+  } else pleins.hidden = true;
   document.getElementById("r-rattrapage").textContent = "+" + pct.format(Math.max(0, r.rattrapage)) + " %";
+  const signe = v => (v >= 0 ? "−" : "+") + euros.format(Math.abs(v)) + " €";
   document.getElementById("r-tableau").innerHTML = r.lignes.map(l =>
     "<tr><td>" + l.annee + (D.previsions.includes(l.annee) ? "*" : "") + "</td><td>" + euros.format(l.reel) + " €</td><td>" +
-    euros.format(l.indexe) + " €</td><td class=\"ecart\">" + (l.ecart >= 0 ? "−" : "+") + euros.format(Math.abs(l.ecart)) + " €</td></tr>"
+    euros.format(l.indexe) + " €</td><td class=\"ecart\">" + signe(l.ecart) + "</td><td class=\"ecart\">" + signe(12 * l.ecart) + "</td></tr>"
   ).join("");
+  document.getElementById("r-total-tableau").textContent = signe(r.total);
   res.hidden = false;
   res.scrollIntoView({ behavior: "smooth", block: "start" });
 });
