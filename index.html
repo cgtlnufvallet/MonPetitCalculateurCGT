@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Combien j'ai perdu ? — CGT LNUF Vallet</title>
-<meta name="description" content="Calculez ce que l'inflation a pris à votre salaire depuis 2022. Calcul fait sur votre téléphone, rien n'est enregistré.">
+<meta name="description" content="Calculez ce que l'inflation a pris à votre salaire depuis 2023. Calcul fait sur votre téléphone, rien n'est enregistré.">
 <style>
 @font-face { font-family: "Anton"; src: url("polices/Anton-400.ttf") format("truetype"); font-display: swap; }
 @font-face { font-family: "Oswald"; font-weight: 700; src: url("polices/Oswald-700.ttf") format("truetype"); font-display: swap; }
@@ -43,7 +43,19 @@ button:active { background: #A80D13; }
 .hero .leg { margin: 0; font-weight: 700; line-height: 1.3; }
 .hero p { margin: 0; }
 tfoot td { font-weight: 700; border-top: 2px solid var(--noir); border-bottom: 0; }
-tfoot td.ecart { font-size: 17px; }
+tfoot td.ecart, tfoot td.avance { font-size: 17px; }
+td.avance { font-weight: 700; color: var(--noir); }
+.projection { border-top: 6px solid var(--noir); }
+.hyp { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 4px 0 6px; }
+.hyp label { font-size: 14px; font-weight: 700; display: flex; flex-direction: column; gap: 4px; margin: 0; }
+.champ-hyp { display: inline-flex; align-items: center; gap: 6px; }
+.champ-hyp input { width: 76px; font: 700 18px/1 "Open Sans", Arial, sans-serif; padding: 8px 10px; border: 2px solid var(--noir); border-radius: 0; }
+.projection .duo { margin-top: 12px; }
+.projection .val { font: 400 40px/1 "Anton", Impact, sans-serif; color: var(--rouge); margin: 2px 0 4px; white-space: nowrap; }
+.projection .leg { margin: 0; font-weight: 700; line-height: 1.3; font-size: 15px; }
+.projection .duo > div { border-left: 4px solid var(--rouge); padding-left: 12px; }
+.message { margin: 12px 0 0; padding: 10px 12px; background: var(--fond); border-left: 5px solid var(--rouge); font-weight: 700; }
+.carte h2 + p { margin-top: 0; }
 .chiffres { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 18px; }
 .chiffres .carte { margin: 0; padding: 14px; }
 .chiffres .val { font: 400 32px/1.05 "Anton", Impact, sans-serif; color: var(--noir); }
@@ -70,8 +82,8 @@ footer { font-size: 13px; color: var(--gris); margin-top: 22px; }
 <div class="bandeau"><span>La Vendangeuse</span><b>CGT LNUF Vallet</b></div>
 <main>
   <h1>Combien j'ai <span>perdu&nbsp;?</span></h1>
-  <p class="intro">Depuis 2022, les prix ont pris <b>+17,4&nbsp;%</b>. Nos augmentations générales&nbsp;: <b>+13,5&nbsp;%</b>.
-     Tapez votre salaire et voyez ce que l'inflation vous a pris, en euros.</p>
+  <p class="intro">En 2026, les prix ont pris <b>+3,4&nbsp;%</b>. Nos augmentations générales&nbsp;: <b>0,85&nbsp;% (minimum 20&nbsp;€ brut)</b>.
+     Tapez votre salaire&nbsp;: voici ce que cette année vous coûte, en euros, et où vous en êtes depuis 2023.</p>
 
   <form class="carte" id="formulaire" novalidate>
     <label for="salaire">Votre salaire de base brut mensuel en 2026</label>
@@ -86,37 +98,68 @@ footer { font-size: 13px; color: var(--gris); margin-top: 22px; }
 
   <section id="resultat" aria-live="polite" hidden>
     <div class="carte hero">
-      <h2>Il vous manque</h2>
+      <h2>En 2026, il vous manque</h2>
       <div class="duo">
-        <div><div class="val" id="r-ecart"></div><p class="leg">brut chaque mois, aujourd'hui</p></div>
-        <div><div class="val" id="r-total"></div><p class="leg">brut au total depuis 2022</p></div>
+        <div><div class="val" id="r-mois"></div><p class="leg">brut chaque mois</p></div>
+        <div><div class="val" id="r-an"></div><p class="leg">brut sur l'année 2026</p></div>
       </div>
       <p id="r-phrase"></p>
     </div>
     <div class="chiffres">
       <div class="carte" id="c-pleins"><div class="val" id="r-pleins"></div><p id="r-pleins-leg"></p></div>
-      <div class="carte"><div class="val" id="r-rattrapage"></div><p>d'augmentation, tout de suite, rien que pour revenir au niveau de 2021.</p></div>
+      <div class="carte"><div class="val" id="r-rattrapage"></div><p id="r-rattrapage-leg"></p></div>
     </div>
     <div class="carte">
+      <h2>Et depuis 2023&nbsp;?</h2>
+      <p id="r-bilan"></p>
+      <p class="message">Ce n&#x27;est pas un hasard. Après les élections de décembre 2023, la CGT a pesé plus lourd à Vallet&nbsp;: plus d&#x27;élu·es sur le terrain, des débrayages bien suivis. En 2024 et 2025, nos augmentations ont devancé les prix. En 2026, mobiliser a été plus dur dans un contexte compliqué&nbsp;: 0,85&nbsp;% seulement, et l&#x27;avance a fondu.</p>
       <table>
-        <caption>Votre salaire de base brut mensuel, et ce qui vous a manqué année par année</caption>
-        <thead><tr><th scope="col">Année</th><th scope="col">Avec nos NAO</th><th scope="col">Indexé sur les prix</th><th scope="col">Manque par mois</th><th scope="col">Manque sur l'année</th></tr></thead>
+        <caption>Votre salaire de base brut mensuel face aux prix depuis 2022 («&nbsp;−&nbsp;» = ce qui vous a manqué, «&nbsp;+&nbsp;» = une avance)</caption>
+        <thead><tr><th scope="col">Année</th><th scope="col">Avec nos NAO</th><th scope="col">Indexé sur les prix</th><th scope="col">Écart par mois</th><th scope="col">Écart sur l'année</th></tr></thead>
         <tbody id="r-tableau"></tbody>
-        <tfoot><tr><td colspan="4">Total depuis 2022</td><td class="ecart" id="r-total-tableau"></td></tr></tfoot>
+        <tfoot><tr><td colspan="4">Bilan 2023-2026</td><td class="ecart" id="r-total-tableau"></td></tr></tfoot>
       </table>
+    </div>
+    <div class="carte projection">
+      <h2>Et demain&nbsp;? Projection 2027-2030</h2>
+      <div class="hyp">
+        <label>Hausse des prix par an
+          <span class="champ-hyp"><input id="hyp-inf" type="text" inputmode="decimal" value="2,0"><span>%</span></span></label>
+        <label>NAO sans rapport de force, par an
+          <span class="champ-hyp"><input id="hyp-nao" type="text" inputmode="decimal" value="1,2"><span>%</span></span></label>
+      </div>
+      <p class="aide">Hypothèses modifiables. Par défaut&nbsp;: prix +2,0&nbsp;% par an (la cible de la Banque centrale européenne)
+         et des NAO au niveau moyen des deux dernières années (+1,2&nbsp;%).</p>
+      <div class="duo">
+        <div><div class="val" id="p-perte"></div><p class="leg" id="p-perte-leg"></p></div>
+        <div><div class="val" id="p-total"></div><p class="leg" id="p-total-leg"></p></div>
+      </div>
+      <table>
+        <caption>Votre salaire de base brut mensuel selon le rapport de force</caption>
+        <thead><tr><th scope="col">Année</th><th scope="col">Sans rapport de force</th><th scope="col">Avec rapport de force*</th><th scope="col">Différence par mois</th></tr></thead>
+        <tbody id="p-tableau"></tbody>
+      </table>
+      <p class="aide">* Rattrapage de la perte de 2026 dès 2027, puis des augmentations égales à la hausse des prix.
+         C'est une projection, pas une prévision&nbsp;: elle montre seulement où mènent les hypothèses ci-dessus.</p>
+      <p class="message">La différence entre les deux colonnes, c'est le rapport de force. Il ne se décrète pas&nbsp;: il se construit
+         à plusieurs. En octobre 2022, la grève sur plusieurs sites LNUF a ramené la prime vacances. Sans force collective,
+         c'est la colonne de gauche qui nous attend.</p>
     </div>
   </section>
 
   <details>
     <summary>Comment c'est calculé</summary>
     <ol>
-      <li>On part de votre salaire de base actuel et on retire, année par année, les augmentations générales des NAO
-          (2022 : 2,5&nbsp;% ; 2023 : 4,7&nbsp;% ; 2024 : 3,3&nbsp;% ; 2025 : 1,5&nbsp;% ; 2026 : 0,85&nbsp;%, minimum 20&nbsp;€). On retrouve ainsi votre salaire de 2021.</li>
-      <li>On fait évoluer ce salaire de 2021 au rythme des prix (inflation INSEE, moyenne annuelle&nbsp;: 2022 : 5,2&nbsp;% ; 2023 : 4,9&nbsp;% ; 2024 : 2,0&nbsp;% ; 2025 : 0,9&nbsp;% ; 2026 : 3,4&nbsp;%).</li>
-      <li>L'écart entre les deux, c'est ce que l'inflation vous a pris. La perte cumulée l'additionne sur 12 mois par an.</li>
+      <li>En 2026&nbsp;: on retrouve votre salaire de l'an dernier en retirant l'augmentation générale de 2026
+          (0,85&nbsp;% (minimum 20&nbsp;€ brut)), puis on lui applique la hausse des prix de 2026 (+3,4&nbsp;%). L'écart avec votre salaire
+          actuel, c'est ce qu'il vous manque chaque mois.</li>
+      <li>Depuis 2023&nbsp;: on retire, année par année, les augmentations générales des NAO
+          (2023 : 4,7&nbsp;% ; 2024 : 3,3&nbsp;% ; 2025 : 1,5&nbsp;% ; 2026 : 0,85&nbsp;%, minimum 20&nbsp;€) pour retrouver votre salaire de 2022, puis on le fait évoluer au rythme des prix
+          (inflation INSEE, moyenne annuelle&nbsp;: 2023 : 4,9&nbsp;% ; 2024 : 2,0&nbsp;% ; 2025 : 0,9&nbsp;% ; 2026 : 3,4&nbsp;%). Le bilan additionne les écarts sur 12 mois par an.</li>
     </ol>
-    <p>Limites&nbsp;: montants bruts, hors ancienneté, promotions et primes, qui ne compensent pas l'inflation pour tout le monde.
-       </p>
+    <p>Limites&nbsp;: montants bruts, hors ancienneté, promotions et primes. Chaque augmentation est comptée sur l'année
+       entière, alors qu'elle tombe souvent au printemps ou à l'automne (en 2023&nbsp;: 3,5&nbsp;% en avril, 1,2&nbsp;% en décembre)&nbsp;:
+       le calcul est donc plutôt favorable aux NAO. </p>
   </details>
 
   <div class="cta">
@@ -130,7 +173,7 @@ footer { font-size: 13px; color: var(--gris); margin-top: 22px; }
 </main>
 
 <script>
-const D = {"annees": [2022, 2023, 2024, 2025, 2026], "nao": [2.5, 4.7, 3.3, 1.5, 0.85], "inflation": [5.2, 4.9, 2.0, 0.9, 3.4], "previsions": [], "plancher": {"2026": 20}, "plein_eur": 100, "plein_note": "plein de 50 L de SP95-E10 au prix moyen de mi-novembre 2026"};
+const D = {"annees": [2023, 2024, 2025, 2026], "nao": [4.7, 3.3, 1.5, 0.85], "inflation": [4.9, 2.0, 0.9, 3.4], "previsions": [], "plancher": {"2026": 20}, "plein_eur": 100, "plein_note": "plein de 50 L de SP95-E10 au prix moyen de mi-novembre 2026", "proj_annees": 4, "proj_inflation": 2.0, "proj_nao": 1.2};
 const euros = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 const pct = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, minimumFractionDigits: 1 });
 
@@ -154,8 +197,40 @@ function calculer(s) {
     return { annee: a, reel: reel[k], indexe, ecart };
   });
   const der = lignes[n - 1];
-  return { base, lignes, total, ecart: der.ecart, indexe: der.indexe, rattrapage: (der.indexe / s - 1) * 100 };
+  // l'année en cours : salaire de l'an dernier + inflation de l'année, comparé au salaire actuel
+  const prev = n > 1 ? reel[n - 2] : base;
+  const cible = prev * (1 + D.inflation[n - 1] / 100);
+  return { base, lignes, total, ecartFin: der.ecart, prev, cible, manque: cible - s,
+           obtenu: (s / prev - 1) * 100, rattrapage: (cible / s - 1) * 100 };
 }
+
+// projection : salaire actuel augmenté de la NAO « sans rapport de force », comparé à un salaire qui rattrape
+// la perte de l'année puis suit les prix ; et perte de pouvoir d'achat par rapport à aujourd'hui
+let dernier = null;
+const lire = (id, defaut) => { const v = parseFloat(document.getElementById(id).value.replace(",", ".")); return isNaN(v) ? defaut : v; };
+function projeter() {
+  if (!dernier) return;
+  const { s, r } = dernier, fin = D.annees[D.annees.length - 1];
+  const i = lire("hyp-inf", D.proj_inflation) / 100, a = lire("hyp-nao", D.proj_nao) / 100;
+  const departAvec = Math.max(s, r.cible);  // rattrapage de l'année en cours
+  let total = 0, lignes = "", sans = s, avec = departAvec, garder = s;
+  for (let t = 1; t <= D.proj_annees; t++) {
+    sans *= 1 + a; avec *= 1 + i; garder *= 1 + i;
+    total += 12 * (avec - sans);
+    lignes += "<tr><td>" + (fin + t) + "</td><td>" + euros.format(sans) + " €</td><td>" + euros.format(avec) +
+      " €</td><td class=\"ecart\">" + euros.format(avec - sans) + " €</td></tr>";
+  }
+  const perte = garder - sans, anFin = fin + D.proj_annees;
+  document.getElementById("p-tableau").innerHTML = lignes;
+  document.getElementById("p-perte").textContent = (perte >= 0 ? "−" : "+") + euros.format(Math.abs(perte)) + " €";
+  document.getElementById("p-perte-leg").textContent = perte >= 0
+    ? "de pouvoir d'achat par mois en " + anFin + " par rapport à aujourd'hui, sans rapport de force."
+    : "par mois en " + anFin + " : avec ces hypothèses, le pouvoir d'achat progresserait.";
+  document.getElementById("p-total").textContent = euros.format(Math.max(0, total)) + " €";
+  document.getElementById("p-total-leg").textContent = "brut perdus en " + D.proj_annees + " ans sans rapport de force, face à des salaires qui suivent les prix.";
+}
+document.getElementById("hyp-inf").addEventListener("input", projeter);
+document.getElementById("hyp-nao").addEventListener("input", projeter);
 
 const f = document.getElementById("formulaire"), champ = document.getElementById("salaire");
 const err = document.getElementById("erreur"), res = document.getElementById("resultat");
@@ -169,25 +244,46 @@ f.addEventListener("submit", (e) => {
   }
   err.hidden = true;
   const r = calculer(s);
-  const fin = D.annees[D.annees.length - 1];
-  document.getElementById("r-ecart").textContent = euros.format(Math.max(0, r.ecart)) + " €";
-  document.getElementById("r-total").textContent = euros.format(Math.max(0, r.total)) + " €";
+  const fin = D.annees[D.annees.length - 1], debut = D.annees[0];
+  const manque = Math.max(0, r.manque), manqueAn = 12 * manque;
+  document.getElementById("r-mois").textContent = euros.format(manque) + " €";
+  document.getElementById("r-an").textContent = euros.format(manqueAn) + " €";
   document.getElementById("r-phrase").textContent =
-    "Si votre salaire avait suivi les prix depuis " + D.annees[0] + ", il serait de " + euros.format(r.indexe) +
-    " € brut par mois en " + fin + ", au lieu de " + euros.format(s) + " €. Mois après mois, de " + D.annees[0] +
-    " à " + fin + ", ces écarts s'additionnent : " + euros.format(Math.max(0, r.total)) + " € brut qui ne sont jamais arrivés sur votre compte.";
+    "Pour suivre les prix de " + fin + " (+" + pct.format(D.inflation[D.inflation.length - 1]) + " %), votre salaire de base aurait dû passer de " +
+    euros.format(r.prev) + " € à " + euros.format(r.cible) + " € brut par mois. Avec la NAO (+" + pct.format(r.obtenu) + " %), il est à " +
+    euros.format(s) + " €.";
   const pleins = document.getElementById("c-pleins");
-  if (D.plein_eur) {
-    document.getElementById("r-pleins").textContent = Math.round(Math.max(0, r.total) / D.plein_eur) + " pleins";
-    document.getElementById("r-pleins-leg").textContent = "d'essence avec ce total" + (D.plein_note ? " (" + D.plein_note + ")" : "") + ".";
+  if (D.plein_eur && manqueAn > 0) {
+    pleins.hidden = false;
+    document.getElementById("r-pleins").textContent = Math.round(manqueAn / D.plein_eur) + " pleins";
+    document.getElementById("r-pleins-leg").textContent = "d'essence perdus sur l'année " + fin + (D.plein_note ? " (" + D.plein_note + ")" : "") + ".";
   } else pleins.hidden = true;
   document.getElementById("r-rattrapage").textContent = "+" + pct.format(Math.max(0, r.rattrapage)) + " %";
-  const signe = v => (v >= 0 ? "−" : "+") + euros.format(Math.abs(v)) + " €";
+  document.getElementById("r-rattrapage-leg").textContent = "d'augmentation tout de suite, rien que pour rattraper les prix de " + fin + ".";
+  // bilan depuis le début, avec son vrai signe (perte ou avance)
+  let bilan;
+  if (r.ecartFin > 0) {
+    bilan = "Aujourd'hui, votre salaire vaut " + euros.format(r.ecartFin) + " € brut de moins par mois qu'en " + (debut - 1) + ", en pouvoir d'achat. ";
+    bilan += r.total > 0
+      ? "Mis bout à bout depuis " + debut + ", ces écarts font " + euros.format(r.total) + " € brut qui ne sont jamais arrivés sur votre compte."
+      : "Les petites avances prises sur les prix les années précédentes (" + euros.format(-r.total) + " € brut en tout sur la période) ont fondu : " + fin + " a tout effacé.";
+  } else {
+    bilan = "Depuis " + (debut - 1) + ", votre salaire a gardé " + euros.format(-r.ecartFin) + " € brut d'avance par mois sur les prix, mais " +
+      fin + " vous en a déjà repris " + euros.format(manque) + " € par mois. Sans rattrapage, l'avance disparaît.";
+  }
+  document.getElementById("r-bilan").textContent = bilan;
+  const signe = v => (v > 0.5 ? "−" : v < -0.5 ? "+" : "") + euros.format(Math.abs(v)) + " €";
+  const classe = v => v > 0.5 ? "ecart" : "avance";
   document.getElementById("r-tableau").innerHTML = r.lignes.map(l =>
     "<tr><td>" + l.annee + (D.previsions.includes(l.annee) ? "*" : "") + "</td><td>" + euros.format(l.reel) + " €</td><td>" +
-    euros.format(l.indexe) + " €</td><td class=\"ecart\">" + signe(l.ecart) + "</td><td class=\"ecart\">" + signe(12 * l.ecart) + "</td></tr>"
+    euros.format(l.indexe) + " €</td><td class=\"" + classe(l.ecart) + "\">" + signe(l.ecart) + "</td><td class=\"" + classe(l.ecart) + "\">" +
+    signe(12 * l.ecart) + "</td></tr>"
   ).join("");
-  document.getElementById("r-total-tableau").textContent = signe(r.total);
+  const tot = document.getElementById("r-total-tableau");
+  tot.textContent = signe(r.total);
+  tot.className = classe(r.total);
+  dernier = { s, r };
+  projeter();
   res.hidden = false;
   res.scrollIntoView({ behavior: "smooth", block: "start" });
 });
